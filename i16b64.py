@@ -1,3 +1,11 @@
+# interpreter for 16b64
+
+# constants
+# based on SHA-256 Hash of "16b64"
+# 1c7214bcfc267e37b53f4fda20fe445ab76a25e582c06551b0e6c30483f36adc
+
+import sys
+
 v0 = 0x1c72
 v1 = 0x14bc
 v2 = 0xfc26
@@ -11,9 +19,14 @@ v9 = 0x25e5
 
 literals = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9]
 
+
+# shift functionality
 def shift(num, amount, dir):
 
+    #Get hex part of number
     num = hex(int(num)).split('x')[-1]
+
+
     str = (bin(int(num, 16))[2:]).zfill(16)
 
     amount = amount % 16
@@ -27,13 +40,20 @@ def shift(num, amount, dir):
     return int(str, 2)
 
 
-def run(stdin, code):
+# main running function
+def interpret(code):
+    if code == None or code == "":
+        return "Interpreter Error: No code to run."
+
+    #print(code)
+
     loopstack = []
     stack = []
     flag = False
 
     returnString = ""
 
+    # cycle through each instruction
     for i in range(len(code)):
 
         char = code[i]
@@ -160,6 +180,13 @@ def run(stdin, code):
 
     return returnString
 
+def run():
+    if sys.argv[1] == "-c":
+        sys.stdout.write(interpret(sys.argv[2]) + "\n")
+    else:
+        for line in sys.argv[1]:
+            sys.stdout.write(interpret(line) + "\n")
+
+
 if __name__ == "__main__":
-    for line in fileinput.input():
-        pass
+    run()
