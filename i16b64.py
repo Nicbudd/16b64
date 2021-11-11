@@ -5,6 +5,7 @@
 # 1c7214bcfc267e37b53f4fda20fe445ab76a25e582c06551b0e6c30483f36adc
 
 import sys
+import re
 
 v0 = 0x1c72
 v1 = 0x14bc
@@ -21,7 +22,7 @@ literals = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9]
 
 
 # shift functionality
-def shift(num, amount, dir):
+def shift(num, amount, direction):
 
     # Please refactor this section this is bad omg
 
@@ -34,7 +35,7 @@ def shift(num, amount, dir):
     amount = amount % 16
 
     # if shifting right
-    if (dir == 'r'):
+    if direction == 'r':
         # str = right side + left side
         str = (str[16 - int(amount):] + str[0: 16 - int(amount)])
 
@@ -46,17 +47,19 @@ def shift(num, amount, dir):
 
 
 # main running function
-def interpret(code):
+def interpret(code, debug=False):
 
     # input handling
-    if code == None or code == "":
+    if code is None or code == "":
         return "Interpreter Error: No code to run."
 
+    # remove comments
+    code = re.search(r"^([^\#]*)\#?.*$", code).group(1)
     code = code.split("\n")
 
-    #define variables used in execution
+    # define variables used in execution
     stack = []
-    loopstack = []
+    loopStack = []  # list of pointers back to beginning of loop
     flag = False
 
     returnString = ""
@@ -72,14 +75,11 @@ def interpret(code):
             # single instruction is put in char
             char = line[i]
 
-            #print(char, stack)
-
-            # break execution after comment marker
-            if char in ["#"]:
-                break
+            if debug:
+                sys.stdout.write(f"{char} {stack}\n")
 
             # add literals to the stack
-            elif char in ["0","1","2","3","4","5","6","7","8","9"]:
+            if char in ["0","1","2","3","4","5","6","7","8","9"]:
                 stack.append(literals[int(char)])
 
             # FUNCTIONS
@@ -210,12 +210,14 @@ def interpret(code):
 
             # Start loop
             elif char == "(":
-                loopstack.append(i)
+                loopStack.append(i)
 
             # Loop if flag
             elif char == ")":
                 if flag:
-                    i = loopstack.pop()
+                    i = loopStack.pop()
+                else:
+                    loopStack.pop()
 
             # Otherwise there's a character we don't recognize, return error.
             else:
@@ -231,25 +233,33 @@ def interpret(code):
 def run():
     # Figure out what to do with the command line args
 
+    flags = ""
+
+    for x in sys.argv:
+        if x[0] == "-":
+            flags.append(x[1:])
+
+    #print(flags)
+    debug = "d" in flags
+
     # No arguments
     if len(sys.argv) <= 1:
         if sys.stdin is None:
             sys.stdout.write("No arguments given")
         else:
-            sys.stdout.write(interpret(sys.stdin.readline()))
+            sys.stdout.write(interpret(sys.stdin.readline(), debug))
 
-    elif "." in sys.argv[1]:
-
-        with open(sys.argv[1]) as file:
+    elif "." in sys.argv[-1]:
+        with open(sys.argv[-1]) as file:
             program = ""
 
             for line in file:
                 program += line
 
-            sys.stdout.write(interpret(program))
+            sys.stdout.write(interpret(program, debug))
 
     else:
-        sys.stdout.write(interpret(sys.argv[1]))
+        sys.stdout.write(interpret(sys.argv[-1], debug))
 
 
 if __name__ == "__main__":
