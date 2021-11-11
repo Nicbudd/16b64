@@ -6,7 +6,7 @@ There are 10 two-byte constants in 16b64 that must be manipulated to generate ot
 
 Operations are done to a stack with 16 bit words in reverse polish notation. The language has 64 instructions, each written with single characters. The operations include the characters `A-Z, a-z` and loops are done with `()`, giving 64 possible instructions
 
-# Constants:
+## Constants:
 
 `"0"` = `0x1c72`  
 `"1"` = `0x14bc`  
@@ -19,7 +19,7 @@ Operations are done to a stack with 16 bit words in reverse polish notation. The
 `"8"` = `0xb76a`  
 `"9"` = `0x25e5`  
 
-# Examples:
+## Examples:
 `7` - Puts `0x445a` on the stack.  
 `9` - Puts `0x25e5` on the stack.  
 `r` - Rotates previous stack item right by one.  
