@@ -1,0 +1,7 @@
+471LAl 67A a  C  # const 0x4865, ASCII "He", print
+18O3Al        C  # const 0x6c6c, ASCII "ll", print
+56X 77rA a    C  # const 0x6f2c, ASCII "o,", print
+689LA 25ON a  C  # const 0x2057, ASCII " W", print
+25la0L 77rA a C  # const 0x6f72, ASCII "or", print
+05a 02a7A a   C  # const 0x6c64, ASCII "ld", print
+04rON         C  # const 0x2100, ASCII "![NUL]", print

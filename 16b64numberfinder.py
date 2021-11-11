@@ -1,4 +1,6 @@
-import b16b64
+# Currently broken
+
+import i16b64
 
 v0 = 0x1c72
 v1 = 0x14bc
@@ -12,6 +14,17 @@ v8 = 0xb76a
 v9 = 0x25e5
 
 literals = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9]
+
+
+def main2():
+
+    constants = []
+
+    for x in range(2 ** 16):
+        constants.append("")
+
+
+
 
 #figure out the size of the stack after the calculations
 def stacksize(code):
@@ -99,16 +112,17 @@ def main():
 
     file.close()
 
-main()
+#l = []
+
+#    for x in "penisballs":
+#        l.append(f"{ord(x):02x}")
+#
+#    if len(l) % 2 == 1:
+#        l.append("00")
+#
+#    for x in range(len(l) // 2):
+#        print(l[x*2] + l[(x*2)+1])
 
 
-l = []
-
-for x in "penisballs":
-    l.append(f"{ord(x):02x}")
-
-if len(l) % 2 == 1:
-    l.append("00")
-
-for x in range(len(l) // 2):
-    print(l[x*2] + l[(x*2)+1])
+if __name__ == "__main__":
+    main2()

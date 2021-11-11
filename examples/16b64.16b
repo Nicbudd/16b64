@@ -1,0 +1,6 @@
+34a4A  # const 0x3136, ASCII "16"
+C      # print ASCII
+0N6O3a # const 0x6236, ASCII "b6"
+C      # print ASCII
+373RA  # const 0x3400, ASCII "4[NUL]"
+C      # print ASCII
