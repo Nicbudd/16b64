@@ -25,4 +25,4 @@ Operations are done to a stack with 16 bit words in reverse polish notation. The
 `r` - Rotates previous stack item right by one.  
 `A` - logical AND two previous stack items.  
 `79rA` - puts `0x005a` on stack.  
-`79rAC` - puts "R" (ASCII `0x5a`) to <stdout>.  
+`79rAC` - puts "R" (ASCII `0x5a`) to `STDOUT`.  
