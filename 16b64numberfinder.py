@@ -165,7 +165,7 @@ def main():
 
     #print(codeList)
 
-    file = open("16b64constants.txt", "w")
+    file = open("16b64constantsold.txt", "w")
 
     for x in range(len(constants)):
         file.write(f"{x:#06x} - {', '.join(constants[x])}\n")
