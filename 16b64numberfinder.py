@@ -81,7 +81,7 @@ def main2():
     lenSortedConstants = sorted(constants, key=lenSortFunc)
     knownConstants = [c for c in lenSortedConstants if c["len"] < float('inf')]
 
-    with open("16b64constants2.txt", "w") as file:
+    with open("16b64constants.txt", "w") as file:
         for x in range(len(constants)):
             file.write(f"{x:#06x} - {', '.join(constants[x]['seq'])}\n")
 
