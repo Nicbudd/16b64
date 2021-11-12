@@ -54,8 +54,8 @@ def interpret(code, debug=False):
         return "Interpreter Error: No code to run."
 
     # remove comments
-    code = re.search(r"^([^\#]*)\#?.*$", code).group(1)
     code = code.split("\n")
+    code = [re.search(r"^([^\#]*)\#?.*$", x).group(1) for x in code]
 
     # define variables used in execution
     stack = []
