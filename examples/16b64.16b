@@ -2,5 +2,5 @@
 C      # print ASCII
 0N6O3a # const 0x6236, ASCII "b6"
 C      # print ASCII
-373RA  # const 0x3400, ASCII "4[NUL]"
+890raA  # const 0x340A, ASCII "4[NUL]"
 C      # print ASCII

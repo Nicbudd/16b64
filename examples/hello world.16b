@@ -4,4 +4,4 @@
 081lXlX  C  # const 0x2057, ASCII " W", print
 585raNX  C  # const 0x6f72, ASCII "or", print
 042lANa  C  # const 0x6c64, ASCII "ld", print
-04rON    C  # const 0x2100, ASCII "![NUL]", print
+015Aa    C  # const 0x210A, ASCII "!\n", print

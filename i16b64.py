@@ -153,11 +153,9 @@ def interpret(code, debug=False):
                 y = stack.pop()
                 sum = x+y
 
-                if sum > 0xffff:
-                    sum -= 0x10000
-                    flag = True
-                else:
-                    flag = False
+                flag = sum > 0xffff
+                sum %= 2**16
+
                 stack.append(sum)
 
             # Sets flag true if even, false if not
@@ -237,7 +235,7 @@ def run():
 
     for x in sys.argv:
         if x[0] == "-":
-            flags.append(x[1:])
+            flags += x[1:]
 
     #print(flags)
     debug = "d" in flags
