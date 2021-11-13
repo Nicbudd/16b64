@@ -62,8 +62,6 @@ def interpret(source, flags=""):
 
     code = "".join("".join(source).split())
 
-    print(code)
-
 
     # define variables used in execution
     stack = []
