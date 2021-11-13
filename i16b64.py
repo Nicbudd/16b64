@@ -47,195 +47,193 @@ def shift(num, amount, direction):
 
 
 # main running function
-def interpret(code, flags=""):
+def interpret(source, flags=""):
 
     debug = "d" in flags
     safe = "s" in flags
 
     # input handling
-    if code is None or code == "":
+    if source is None or source == "":
         return "Interpreter Error: No code to run.\n"
 
     # remove comments
-    code = code.split("\n")
-    code = [re.search(r"^([^\#]*)\#?.*$", x).group(1) for x in code]
+    source = source.split("\n")
+    source = [re.search(r"^([^\#]*)\#?.*$", x).group(1) for x in source]
+
+    code = "".join("".join(source).split())
+
+    print(code)
+
 
     # define variables used in execution
     stack = []
     loopStack = []  # list of pointers back to beginning of loop
     flag = False
-
     returnString = ""
-
     loopIterations = 0
 
-    #print(code)
+    # cycle through each instruction
+    # not a for loop as we might end up back where we started
+    i = 0
+    while i < len(code):
 
-    for line in code:
-        line = line.strip().replace(" ", "")
+        # single instruction is put in char
+        char = code[i]
 
-        # cycle through each instruction
-        # not a for loop as we might end up back where we started
-        i = 0
-        while i < len(line):
+        if debug:
+            sys.stdout.write(f"{i:>3}: {char} {loopStack} {str(flag).ljust(5)} {[f'0x{i:04x}' for i in stack]}\n")
 
-            # single instruction is put in char
-            char = line[i]
+        # add literals to the stack
+        if char in ["0","1","2","3","4","5","6","7","8","9"]:
+            stack.append(literals[int(char)])
 
-            if debug:
-                sys.stdout.write(f"{char} {stack} {flag} {loopStack}\n")
+        # FUNCTIONS
+        # AND
+        elif char == "A":
+            x = stack.pop()
+            y = stack.pop()
+            stack.append(x&y)
 
-            # add literals to the stack
-            if char in ["0","1","2","3","4","5","6","7","8","9"]:
-                stack.append(literals[int(char)])
+        # ASCII PRINT
+        elif char == "C":
+            x = stack.pop()
+            y = x >> 8
+            x %= 256
+            returnString += chr(y) + chr(x)
 
-            # FUNCTIONS
-            # AND
-            elif char == "A":
-                x = stack.pop()
-                y = stack.pop()
-                stack.append(x&y)
+        # DUPLICATE
+        elif char == "D":
+            stack.append(stack[-1])
 
-            # ASCII PRINT
-            elif char == "C":
-                x = stack.pop()
-                y = x >> 8
-                x %= 256
-                returnString += chr(y) + chr(x)
+        # SHIFT LEFT BY AMOUNT
+        elif char == "L":
+            x = stack.pop()
+            y = stack.pop()
+            stack.append(shift(y, x, "l"))
 
-            # DUPLICATE
-            elif char == "D":
-                stack.append(stack[-1])
+        # NOT
+        elif char == "N":
+            x = stack.pop()
+            stack.append(x^0xffff)
 
-            # SHIFT LEFT BY AMOUNT
-            elif char == "L":
-                x = stack.pop()
-                y = stack.pop()
-                stack.append(shift(y, x, "l"))
+        # OR
+        elif char == "O":
+            x = stack.pop()
+            y = stack.pop()
+            stack.append(x|y)
 
-            # NOT
-            elif char == "N":
-                x = stack.pop()
-                stack.append(x^0xffff)
+        # Shift right by y
+        elif char == "R":
+            x = stack.pop()
+            y = stack.pop()
+            stack.append(shift(y, x, "r"))
 
-            # OR
-            elif char == "O":
-                x = stack.pop()
-                y = stack.pop()
-                stack.append(x|y)
+        # Swap two stack pieces
+        elif char == "S":
+            x = stack.pop()
+            y = stack.pop()
+            stack.append(x)
+            stack.append(y)
 
-            # Shift right by y
-            elif char == "R":
-                x = stack.pop()
-                y = stack.pop()
-                stack.append(shift(y, x, "r"))
+        # One word unicode code point
+        elif char == "U":
+            x = stack.pop()
+            returnString += chr(x)
 
-            # Swap two stack pieces
-            elif char == "S":
-                x = stack.pop()
-                y = stack.pop()
-                stack.append(x)
-                stack.append(y)
+        # Two word unicode code point
+        elif char == "V":
+            x = stack.pop()
+            y = stack.pop() << 16
+            returnString += chr(y + x)
 
-            # One word unicode code point
-            elif char == "U":
-                x = stack.pop()
-                returnString += chr(x)
+        # XOR
+        elif char == "X":
+            x = stack.pop()
+            y = stack.pop()
+            stack.append(x^y)
 
-            # Two word unicode code point
-            elif char == "V":
-                x = stack.pop()
-                y = stack.pop() << 16
-                returnString += chr(y + x)
+        # Add, set flag if overflow
+        elif char == "a":
+            x = stack.pop()
+            y = stack.pop()
+            sum = x+y
 
-            # XOR
-            elif char == "X":
-                x = stack.pop()
-                y = stack.pop()
-                stack.append(x^y)
+            flag = sum > 0xffff
+            sum %= 2**16
 
-            # Add, set flag if overflow
-            elif char == "a":
-                x = stack.pop()
-                y = stack.pop()
-                sum = x+y
+            stack.append(sum)
 
-                flag = sum > 0xffff
-                sum %= 2**16
+        # Sets flag true if even, false if not
+        elif char == "b":
+            x = stack[-1]
 
-                stack.append(sum)
-
-            # Sets flag true if even, false if not
-            elif char == "b":
-                x = stack[-1]
-
-                if x % 2 == 0:
-                    flag = False
-                else:
-                    flag = True
-
-            # Less than
-            elif char == "c":
-                x = stack[-1]
-                y = stack[-2]
-
-                flag = x < y
-
-            # Delete
-            elif char == "d":
-                x = stack.pop()
-
-            # Equal
-            elif char == "e":
-                x = stack[-1]
-                y = stack[-2]
-
-                flag = x == y
-
-            # Greater than
-            elif char == "g":
-                x = stack[-1]
-                y = stack[-2]
-
-                flag = x > y
-
-            # Invert flag
-            elif char == "i":
-                flag = not flag
-
-            # Shift left
-            elif char == "l": #only if you're a little bitch
-                x = stack.pop()
-                stack.append(shift(x, 1, "l"))
-
-            # Shift right
-            elif char == "r": #only if you're a little bitch
-                x = stack.pop()
-                stack.append(shift(x, 1, "r"))
-
-            # Start loop
-            elif char == "(":
-                loopStack.append(i)
-
-            # Loop if flag
-            elif char == ")":
-                if safe and loopIterations > 10000:
-                    return f"Interpreter Error: Too many loop repetitions.\n"
-                elif flag:
-                    loopIterations += 1
-                    i = loopStack.pop() - 1
-                else:
-                    loopStack.pop()
-
-            # Otherwise there's a character we don't recognize, return error.
+            if x % 2 == 0:
+                flag = False
             else:
-                return f"Interpreter Error: Unknown Char \"{char}\"\n"
+                flag = True
 
-            # list = ""
-            # for var in stack:
-            #     list += format(int(var), "#018b") + ", "
+        # Less than
+        elif char == "c":
+            x = stack[-1]
+            y = stack[-2]
 
-            i += 1
+            flag = x < y
+
+        # Delete
+        elif char == "d":
+            x = stack.pop()
+
+        # Equal
+        elif char == "e":
+            x = stack[-1]
+            y = stack[-2]
+
+            flag = x == y
+
+        # Greater than
+        elif char == "g":
+            x = stack[-1]
+            y = stack[-2]
+
+            flag = x > y
+
+        # Invert flag
+        elif char == "i":
+            flag = not flag
+
+        # Shift left
+        elif char == "l": #only if you're a little bitch
+            x = stack.pop()
+            stack.append(shift(x, 1, "l"))
+
+        # Shift right
+        elif char == "r": #only if you're a little bitch
+            x = stack.pop()
+            stack.append(shift(x, 1, "r"))
+
+        # Start loop
+        elif char == "(":
+            loopStack.append(i)
+
+        # Loop if flag
+        elif char == ")":
+            if safe and loopIterations > 10000:
+                return f"Interpreter Error: Too many loop repetitions.\n"
+            elif flag:
+                loopIterations += 1
+                i = loopStack.pop() - 1
+            else:
+                loopStack.pop()
+
+        # Otherwise there's a character we don't recognize, return error.
+        else:
+            return f"Interpreter Error: Unknown Char \"{char}\"\n"
+
+        # list = ""
+        # for var in stack:
+        #     list += format(int(var), "#018b") + ", "
+
+        i += 1
 
     return returnString
 

@@ -1,0 +1,14 @@
+613LA       # start with constant 0x000A (10 in decimal)
+(           # start loop
+            # this will be our loop constant
+5r61lAa  C  # const 0x4865, ASCII "He", print
+3l33RA   C  # const 0x6c6c, ASCII "ll", print
+7N92Xla  C  # const 0x6f2c, ASCII "o,", print
+081lXlX  C  # const 0x2057, ASCII " W", print
+585raNX  C  # const 0x6f72, ASCII "or", print
+042lANa  C  # const 0x6c64, ASCII "ld", print
+015Aa    C  # const 0x210A, ASCII "!\n", print
+
+54O      a  # with loop only thing on stack, add 0xffff (subtract 1)
+            # if it overflows (aka number is still positive), restart loop
+)
