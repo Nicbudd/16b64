@@ -47,11 +47,14 @@ def shift(num, amount, direction):
 
 
 # main running function
-def interpret(code, debug=False):
+def interpret(code, flags=""):
+
+    debug = "d" in flags
+    safe = "s" in flags
 
     # input handling
     if code is None or code == "":
-        return "Interpreter Error: No code to run."
+        return "Interpreter Error: No code to run.\n"
 
     # remove comments
     code = code.split("\n")
@@ -64,19 +67,23 @@ def interpret(code, debug=False):
 
     returnString = ""
 
+    loopIterations = 0
+
     #print(code)
 
     for line in code:
         line = line.strip().replace(" ", "")
 
         # cycle through each instruction
-        for i in range(len(line)):
+        # not a for loop as we might end up back where we started
+        i = 0
+        while i < len(line):
 
             # single instruction is put in char
             char = line[i]
 
             if debug:
-                sys.stdout.write(f"{char} {stack}\n")
+                sys.stdout.write(f"{char} {stack} {flag} {loopStack}\n")
 
             # add literals to the stack
             if char in ["0","1","2","3","4","5","6","7","8","9"]:
@@ -212,19 +219,23 @@ def interpret(code, debug=False):
 
             # Loop if flag
             elif char == ")":
-                if flag:
-                    i = loopStack.pop()
+                if safe and loopIterations > 10000:
+                    return f"Interpreter Error: Too many loop repetitions.\n"
+                elif flag:
+                    loopIterations += 1
+                    i = loopStack.pop() - 1
                 else:
                     loopStack.pop()
 
             # Otherwise there's a character we don't recognize, return error.
             else:
-                return f"Interpreter Error: Unknown Char \"{char}\""
+                return f"Interpreter Error: Unknown Char \"{char}\"\n"
 
             # list = ""
             # for var in stack:
             #     list += format(int(var), "#018b") + ", "
 
+            i += 1
 
     return returnString
 
@@ -238,14 +249,13 @@ def run():
             flags += x[1:]
 
     #print(flags)
-    debug = "d" in flags
 
     # No arguments
     if len(sys.argv) <= 1:
         if sys.stdin is None:
             sys.stdout.write("No arguments given")
         else:
-            sys.stdout.write(interpret(sys.stdin.readline(), debug))
+            sys.stdout.write(interpret(sys.stdin.readline(), flags))
 
     elif "." in sys.argv[-1]:
         with open(sys.argv[-1]) as file:
@@ -254,10 +264,10 @@ def run():
             for line in file:
                 program += line
 
-            sys.stdout.write(interpret(program, debug))
+            sys.stdout.write(interpret(program, flags))
 
     else:
-        sys.stdout.write(interpret(sys.argv[-1], debug))
+        sys.stdout.write(interpret(sys.argv[-1], flags))
 
 
 if __name__ == "__main__":
