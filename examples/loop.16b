@@ -1,0 +1,8 @@
+0r5NA U         # say "!"
+0Deddi (        # set flag false and start loop 1
+    91rAr U     # say '"'
+    0Dedd (     # set flag true and start loop 2
+        966LA U # say "%"
+    i)          # invert flag false
+0Deddi)         # set flag false
+32Nra U         # say "#"
