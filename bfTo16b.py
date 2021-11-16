@@ -16,17 +16,17 @@ for char in bfCode:
     elif char == "-":
         b16 += "54O a 14NAl M"
     elif char == "<":
-        b16 += "z 54O e (00X i)"
+        b16 += "z 54O ed (00X i)"
     elif char == ">":
-        b16 += "y 54O e (00X i)"
+        b16 += "y 54O ed (z 00X i)"
     elif char == ".":
         b16 += "D C"
     elif char == ",":
         b16 += "I 14NAl M"
     elif char == "[":
-        b16 += "00Xed("
+        b16 += "00Xedi("
     elif char == "]":
-        b16 += "00Xed)"
+        b16 += "00Xedi)"
 
 with open(fileOut, "w") as file:
     file.write(b16)

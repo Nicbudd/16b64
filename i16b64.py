@@ -68,6 +68,7 @@ def interpret(source, stdin, flags=""):
     loopStack = []  # list of pointers back to beginning of loop
     flag = False
     skip = False
+    parenthesis = 0
     returnString = ""
     loopIterations = 0
     #readPos = 1 # how far we are into reading stdin
@@ -83,20 +84,23 @@ def interpret(source, stdin, flags=""):
 
         if debug:
             sys.stdout.write(f"{i:>3}: {char} {loopStack} {str(flag).ljust(5)} "
-                             f"{[f'0x{i:04x}' for i in stack]}\n")
+                             f"{str(skip).ljust(5)} {[f'0x{i:04x}' for i in stack]}\n")
 
         # Start loop if flag
         if char == "(":
             if not flag:
                 skip = True
 
-            loopStack.append(i)
+            if skip:
+                parenthesis += 1
+            else:
+                loopStack.append(i)
 
         # Loop if flag
         elif char == ")":
             if skip:
-                loopStack.pop()
-                if not loopStack:  # nothing in loopStack
+                parenthesis -= 1
+                if parenthesis == 0:
                     skip = False
 
             else:
@@ -146,20 +150,20 @@ def interpret(source, stdin, flags=""):
 
             # READ STDIN
             elif char == "H":
-                i = ord(stdin.read(1))
+                h = ord(stdin.read(1))
                 j = ord(stdin.read(1))
                 k = ord(stdin.read(1))
-                stack.append(i)
+                stack.append(h)
                 stack.append((j << 8) + k)
 
             elif char == "I":
-                i = ord(stdin.read(1))
+                h = ord(stdin.read(1))
                 j = ord(stdin.read(1))
-                stack.append((i << 8) + j)
+                stack.append((h << 8) + j)
 
             elif char == "J":
-                i = ord(stdin.read(1))
-                stack.append(i)
+                h = ord(stdin.read(1))
+                stack.append(h)
 
             # SHIFT LEFT BY AMOUNT
             elif char == "L":
@@ -285,13 +289,14 @@ def interpret(source, stdin, flags=""):
                 x = stack.pop()
                 stack.append(shift(x, 1, "r"))
 
-            # Move to bottom of stack
+            # Move from bottom of stack to top of stack
             elif char == "y":
                 stack.append(stack.pop(0))
 
-            # Move from bottom of stack to top of stack
+            # Move to bottom of stack
             elif char == "z":
                 stack.insert(0, stack.pop())
+
 
 
             # we recognize this character, but we're dealing with it above
