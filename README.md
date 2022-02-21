@@ -41,10 +41,9 @@ For now there are two implementations of the interpreter with slightly different
 2. Install `rustup`. Currently the preferred method by the rust-lang.org website is:  
 `curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh`  
 3. Compile the program in the `i16b64` folder with `cargo`. Cargo should come preinstalled with `rustup` automatically:  
-```sh
-cd 16b64/i16b64  
-cargo build --release  
-```  
+`cd 16b64/i16b64`
+`cargo build --release`  
+
 4. Copy `i16b64` to /usr/local/bin:  
 `sudo cp target/release/i16b64 /usr/local/bin`  
 
@@ -65,11 +64,11 @@ The Rust version of the interpreter is called as and referred to as `i16b64` and
 The interpreter can be called on terminal to run source code directly or by
 reading a file.  
 
-`16b64 5r61lAaC3l33RAC7N92XlaC081lXlXC585raNXC042lANaC015AaC` -> `"Hello, World!"`  
-`i16b64 5r61lAaC3l33RAC7N92XlaC081lXlXC585raNXC042lANaC015AaC` -> `"Hello, World!"`  
+`16b64 5r61lAaC3l33RAC7N92XlaC081lXlXC585raNXC042lANaC015AaC` -> "Hello, World!"  
+`i16b64 5r61lAaC3l33RAC7N92XlaC081lXlXC585raNXC042lANaC015AaC` -> "Hello, World!"  
 
-`16b64 examples/helloWorld.16b` -> `"Hello, World!"`  
-`i16b64 -f examples/helloWorld.16b` -> `"Hello, World!"`  
+`16b64 examples/helloWorld.16b` -> "Hello, World!"  
+`i16b64 -f examples/helloWorld.16b` -> "Hello, World!"  
 
 **Python** Options:  
 
