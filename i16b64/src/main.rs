@@ -430,8 +430,12 @@ pub fn trim_code(code: String) -> String {
 fn main() {
     const HELPMESSAGE: &str =
 "Options:
-    -h, --help             : Print help screen.
-    -f, --file [file_path] : Read file as input. (not implemented yet)
+    -d, --debug       - debug mode: prints debug information for each step of the execution
+    -f, --file [file] - read file and execute as code
+    -s, --safe        - safe mode: prevents infinite loops, loops greater than 10,000 iterations.
+    -h, --help        - prints help message
+
+    flags currently can't be combined
 ";
 
     //input parsing (I am bad at it)
@@ -455,6 +459,7 @@ fn main() {
 
         } else if arg == &String::from("-h") || arg == &String::from("--help") {
             println!("{}", HELPMESSAGE);
+            std::process::exit(0); //SKIBIDIBOPMMMDADA
 
         } else if arg == &String::from("-f") || arg == &String::from("--file") {
             file_flag = true;
