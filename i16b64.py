@@ -145,7 +145,6 @@ def interpret(source, stdin, flags=""):
                 except:
                     flag = False
                 else:
-                    flag = True
                     stack.append(y)
 
             # READ STDIN
