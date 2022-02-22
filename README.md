@@ -41,7 +41,7 @@ For now there are two implementations of the interpreter with slightly different
 2. Install `rustup`. Currently the preferred method by the rust-lang.org website is:  
 `curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh`  
 3. Compile the program in the `i16b64` folder with `cargo`. Cargo should come preinstalled with `rustup` automatically:  
-`cd 16b64/i16b64`
+`cd 16b64/i16b64`  
 `cargo build --release`  
 
 4. Copy `i16b64` to /usr/local/bin:  
