@@ -1,0 +1,12 @@
+3l04rarX          # Year input (2022 for now)
+
+63NAr M           # Year % 100
+b (               # If it's odd,
+447rLA a          # Plus 11
+i )               # Don't loop
+r                 # Divide by two
+b (               # If it's odd,
+447rLA a          # Plus 11
+i )               # Don't loop
+77r7NOa M         # Modulo 7
+C
