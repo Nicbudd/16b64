@@ -47,14 +47,8 @@ fn interpret(code: &str, debug_flag: bool, safe: bool) {
         };
 
         if debug_flag {
-            dbg!(i);
-            dbg!(c);
-            dbg!(&skip_comments);
-            dbg!(&skip_loop);
-            dbg!(&loop_stack);
-            dbg!(flag);
-            dbg!(end_of_loop);
-            dbg!(&stack);
+            eprintln!("'{}'@{}, f={}, skip={}, loop_stack={:?}, stack={:?}", &c, &i, &flag,
+                skip_loop || skip_comments, &loop_stack, &stack)
         }
 
 
@@ -433,7 +427,7 @@ fn main() {
     -d, --debug       - debug mode: prints debug information for each step of
                             the execution
     -f, --file [file] - read file and execute as code
-    -s, --safe        - safe mode: prevents infinite loops, loops greater than 
+    -s, --safe        - safe mode: prevents infinite loops, loops greater than
                             10,000 iterations.
     -h, --help        - prints help message
 
@@ -478,6 +472,11 @@ fn main() {
         }
     }
 
+
+    let trimmed_code = &trim_code(code);
+
+    if debug_flag {eprintln!("Loaded code: {}", trimmed_code);}
+
     // main call to interpret
-    interpret(&trim_code(code), debug_flag, safe_flag);
+    interpret(trimmed_code, debug_flag, safe_flag);
 }

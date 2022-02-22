@@ -1,12 +1,121 @@
-3l04rarX          # Year input (2022 for now)
+# Divide by 100 (unused but helpful)
 
-63NAr M           # Year % 100
+#63NAr   cd        # if 100 less than number (year > 100)
+#00X               # counter
+#(
+#52ON a S          # add 1 to counter
+#783rara a         # subtract 100
+#63NAr  cd         # if greater than 100, loop again
+#S                 # swap back to counter
+#)
+#S                 # swap to get modulo
+
+
+JJJJ              # Input 4 digits
+099lala a z       # Subtract 0x0030 from each (add 0xffd0)
+099lala a z
+099lala a z
+099lala a z
+
+# add 3rd and 4th digit
+
+S                 # put number to multiply by 10 on top
+
+# multiply by 10
+D                 # duplicate original
+52ON              # counter (starts at one since we already have original in var x)
+3bd (             # enter loop
+52ONa             # increment counter
+0p                # push counter two levels down
+S                 # swap to get original in front
+D                 # duplicate
+0p                # push original two levels down
+a                 # add original to sum
+0f                # pull counter from two levels down
+613LA gd          # if less than 10, continue
+)
+dSd               # delete counter, delete original
+a                 # add 3rd*10 and 4th digit
+
+0p                # push to second pos
+
+# add 1st and 2nd digit
+
+S                 # put number to multiply by 10 on top
+
+# multiply by 10
+D                 # duplicate original
+52ON              # counter (starts at one since we already have original in var x)
+3bd (             # enter loop
+52ONa             # increment counter
+0p                # push counter two levels down
+S                 # swap to get original in front
+D                 # duplicate
+0p                # push original two levels down
+a                 # add original to sum
+0f                # pull counter from two levels down
+613LA gd          # if less than 10, continue
+)
+dSd               # delete counter, delete original
+a                 # add 1st*10 and 2nd digit
+
+
+# odd + 11 time!
+
+S                 # get last 2 digits
+
 b (               # If it's odd,
-447rLA a          # Plus 11
-i )               # Don't loop
+6r92aA a          # Plus 11
+)                 # Don't loop
+
 r                 # Divide by two
+
 b (               # If it's odd,
-447rLA a          # Plus 11
-i )               # Don't loop
+6r92aA a          # Plus 11
+)                 # Don't loop
+
 77r7NOa M         # Modulo 7
-C
+
+N 77rA a          # Subtract from 7 (7 - a = -a + 7 = (!a + 1) + 7 = !a + 8)
+
+
+# add in top 2 digits
+
+S                 # get top 2 digits
+
+1r5NA M           # Modulo 4
+
+
+# this is the part where we add to the total depending on the century
+# 0 -> 2
+# 1 -> 0
+# 2 -> 5
+# 3 -> 3
+
+
+00X       ed (    # if equal to 0 (if century is 2000, 1600, 1200...)
+d                 # delete original number
+092aA     a       # add 2 (sets flag false)
+)
+
+52ON      ed (    # if equal to 1 (if century is 2100, 1700, 1300...)
+d                 # delete original number
+00X    a          # add 0 (sets flag false)
+)
+
+092aA     ed (    # if equal to 2 (if century is 2200, 1800, 1400...)
+d                 # delete original number
+58ON   a          # add 5 (sets flag false)
+)
+
+102laX    ed (    # if equal to 3 (if century is 2300, 1900, 1500...)
+d                 # delete original number
+102laX a          # add 3 (sets flag false)
+)
+
+
+77r7NOa M         # Modulo 7
+
+
+# print time baybeee
+106AA a U         # Add 0x0030 (to convert to digit) and print
