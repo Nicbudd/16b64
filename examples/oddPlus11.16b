@@ -35,6 +35,7 @@ a                 # add original to sum
 613LA gd          # if less than 10, continue
 )
 dSd               # delete counter, delete original
+
 a                 # add 3rd*10 and 4th digit
 
 0p                # push to second pos
