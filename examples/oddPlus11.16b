@@ -10,6 +10,22 @@
 #)
 #S                 # swap to get modulo
 
+# Old multiplication by 10 (obsolete)
+
+#D                 # duplicate original
+#52ON              # counter (starts at one since we already have original in var x)
+#3bd (             # enter loop
+#52ONa             # increment counter
+#0p                # push counter two levels down
+#S                 # swap to get original in front
+#D                 # duplicate
+#0p                # push original two levels down
+#a                 # add original to sum
+#0f                # pull counter from two levels down
+#613LA gd          # if less than 10, continue
+#)
+#dSd               # delete counter, delete original
+
 
 JJJJ              # Input 4 digits
 099lala a z       # Subtract 0x0030 from each (add 0xffd0)
@@ -22,19 +38,7 @@ JJJJ              # Input 4 digits
 S                 # put number to multiply by 10 on top
 
 # multiply by 10
-D                 # duplicate original
-52ON              # counter (starts at one since we already have original in var x)
-3bd (             # enter loop
-52ONa             # increment counter
-0p                # push counter two levels down
-S                 # swap to get original in front
-D                 # duplicate
-0p                # push original two levels down
-a                 # add original to sum
-0f                # pull counter from two levels down
-613LA gd          # if less than 10, continue
-)
-dSd               # delete counter, delete original
+l D ll a          # multiply by 10 (don't know why I forgot this lol)
 
 a                 # add 3rd*10 and 4th digit
 
@@ -45,19 +49,8 @@ a                 # add 3rd*10 and 4th digit
 S                 # put number to multiply by 10 on top
 
 # multiply by 10
-D                 # duplicate original
-52ON              # counter (starts at one since we already have original in var x)
-3bd (             # enter loop
-52ONa             # increment counter
-0p                # push counter two levels down
-S                 # swap to get original in front
-D                 # duplicate
-0p                # push original two levels down
-a                 # add original to sum
-0f                # pull counter from two levels down
-613LA gd          # if less than 10, continue
-)
-dSd               # delete counter, delete original
+l D ll a          # multiply by 10 (don't know why I forgot this lol)
+
 a                 # add 1st*10 and 2nd digit
 
 
@@ -113,6 +106,7 @@ d                 # delete original number
 d                 # delete original number
 102laX a          # add 3 (sets flag false)
 )
+
 
 
 77r7NOa M         # Modulo 7
