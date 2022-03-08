@@ -46,7 +46,7 @@ fn interpret(code: &str, debug_flag: bool, safe: bool) {
             None => break,
         };
 
-        if debug_flag {
+        if debug_flag && (c == '(' || c == ')' || !skip_loop) {
             eprintln!("'{}'@{}, f={}, skip={}, loop_stack={:?}, stack={:?}", &c, &i, &flag,
                 skip_loop || skip_comments, &loop_stack, &stack)
         }
