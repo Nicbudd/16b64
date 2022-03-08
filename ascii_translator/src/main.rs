@@ -10,6 +10,8 @@ fn main() {
     let file = File::open("../16b64constants.txt").unwrap();
     let reader = BufReader::new(file);
 
+    #[allow(non_snake_case)] // I want to treat this as a constant so it has the constant naming
+                             // scheme
     let RE = Regex::new(r"^.{9}([^,\s]+).*$").unwrap();
 
     let mut line_counter = 0;
@@ -45,10 +47,7 @@ fn main() {
 
     let mut return_string = String::new();
 
-    let mut twobyte = true;
-
     if phrase.is_ascii() {
-        let mut c_counter = 0;
         let mut chars = phrase.chars();
 
         loop {
