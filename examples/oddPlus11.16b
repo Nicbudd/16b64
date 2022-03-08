@@ -72,7 +72,6 @@ b (               # If it's odd,
 
 N 77rA a          # Subtract from 7 (7 - a = -a + 7 = (!a + 1) + 7 = !a + 8)
 
-
 # add in top 2 digits
 
 S                 # get top 2 digits
@@ -90,27 +89,74 @@ S                 # get top 2 digits
 00X       ed (    # if equal to 0 (if century is 2000, 1600, 1200...)
 d                 # delete original number
 092aA     a       # add 2 (sets flag false)
+9                 # dummy value to not activate any of the other statements
 )
 
 52ON      ed (    # if equal to 1 (if century is 2100, 1700, 1300...)
 d                 # delete original number
 00X    a          # add 0 (sets flag false)
+9                 # dummy value to not activate any of the other statements
 )
 
 092aA     ed (    # if equal to 2 (if century is 2200, 1800, 1400...)
 d                 # delete original number
 58ON   a          # add 5 (sets flag false)
+9                 # dummy value to not activate any of the other statements
 )
 
 102laX    ed (    # if equal to 3 (if century is 2300, 1900, 1500...)
 d                 # delete original number
 102laX a          # add 3 (sets flag false)
+9                 # dummy value to not activate any of the other statements
 )
 
+d                 # delete dummy
 
 
 77r7NOa M         # Modulo 7
 
 
 # print time baybeee
+
+# found which loops need to be inverted and which not through trial and error
+
+00X       ed (    # if it's equal to 0 (sunday)
+231lXaC26NArC
+                  # print "Sun"
+i )
+
+52ON      ed (    # if it's equal to 1 (monday)
+69r4raXC26NArC
+                  # print "Mon"
+i )
+
+092aA     ed (    # if it's equal to 2 (tuesday)
+763AraC663NalXC
+                  # print "Tues"
+)
+
+102laX    ed (    # if it's equal to 3 (wednesday)
+105laNXC3l67OAC663NalXC
+                  # print "Wednes"
+)
+
+1r5NA     ed (    # if it's equal to 4 (thursday)
+168AlXC608XrXC51r1lXaC
+                  # print "Thurs"
+)
+
+58ON      ed (    # if it's equal to 5 (friday)
+792ONaC629lAaC
+                  # print "Fri"
+)
+
+621rAA    ed (    # if it's equal to 6 (saturday)
+932laXC13N6NaXC393rarAC
+                  # print "Satur"
+)
+
+9r55RXC701lOXC16NAlC
+                  # print "day ("
+
 106AA a U         # Add 0x0030 (to convert to digit) and print
+1l06AXC           # print ")"
