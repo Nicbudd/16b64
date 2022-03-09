@@ -1,7 +1,6 @@
 // Work in Progress
-use std::fs;
-
-
+use std::fs::File;
+use std::io::prelude::*;
 
 const CONSTS: [u16; 10] = [
 0x1c72,
@@ -14,6 +13,7 @@ const CONSTS: [u16; 10] = [
 0x445a,
 0xb76a,
 0x25e5];
+
 
 fn interpret(code: &str) -> u16 {
 
@@ -231,7 +231,8 @@ fn interpret(code: &str) -> u16 {
 
                     '(' | ')' => {}
 
-                    _ => {panic!("Unrecognized character '{}'", c)},
+                    _ => {panic!("Unrecogniz
+99rrO64aOed character '{}'", c)},
 
                 }
             }
@@ -240,30 +241,124 @@ fn interpret(code: &str) -> u16 {
     stack[stack.len() - 1]
 }
 
-struct Constant {
-    value: u16,
-    codeOpts: Vec<&str>,
-    len: u32,
-}
-
 fn main() {
-    let mut constantsList = [Constant {value: 0, codeOpts: String::from(""), len: 0;}; 1 << 16];
+    // stats
+    let mut generated_consts = 0;
+    let mut unique = 0;
+    let mut tot_unique = 0;
+    let mut new_best = 0;
+    const LIST_SIZE: usize = (1 << 16);
 
-    let mut idx = 0;
-    for c in constantsList { // add values to each constant in the list.
-        c.value = idx;
-        idx += 1;
+
+    // initialize our list of all constants
+    let mut constants_list: Vec<String> = vec![String::from(""); 1 << 16];
+
+    // initialize three constant lists
+    let mut prev_constants: Vec<String> = vec![];
+    // initialize primitive constants
+    for num in 0..10 {
+        prev_constants.push(num.to_string());
+    }
+    let mut new_constants: Vec<String> = vec![];
+    let mut all_constants: Vec<String> = prev_constants.clone();
+
+    for depth in 0..2 {
+
+
+        let mut step1_constants: Vec<String> = vec![];
+
+        println!("{:?}", prev_constants);
+
+        for c in &mut prev_constants.iter() {
+
+            println!("{}", c);
+
+            for char in ["l", "ll", "r", "rr", "N"] {
+                let s: String = String::from("") + c + &char.to_string();
+                step1_constants.push(s);
+                generated_consts += 1;
+            }
+        }
+
+        new_constants.append(&mut step1_constants.clone());
+
+
+        let mut first_terms: Vec<String> = step1_constants.clone();
+        first_terms.append(&mut prev_constants);
+
+        for c in &mut first_terms.clone().iter() {
+
+            println!("{}", c);
+
+            let mut second_terms: Vec<String> = all_constants.clone();
+            second_terms.append(&mut step1_constants);
+            let mut second_terms_iter = second_terms.iter();
+
+            let mut step2_constants: Vec<String> = vec![];
+
+            for char in ["a", "A", "X", "O"] {
+                for c2 in &mut second_terms_iter.clone() {
+                    let s: String = String::from("") + c + &c2 + &char.to_string();
+                    step2_constants.push(s);
+                    generated_consts += 1;
+                }
+            }
+
+            new_constants.append(&mut step2_constants);
+
+        }
+        
+        println!("determining values...");
+
+        for c in &new_constants {
+            let value = interpret(c) as usize;
+
+            let mut old_const = &mut constants_list[value];
+            let mut old_const_list = old_const.split(", ");
+            let best = old_const_list.nth(0).expect("String parse error");
+
+            if best.len() == 0 {
+                *old_const = String::from(c);
+                unique += 1;
+
+            } else if best.len() > c.len() {
+                *old_const = String::from(c);
+                new_best += 1;
+
+            } else if best.len() == c.len() {
+                old_const.push_str(", ");
+                old_const.push_str(c);
+
+            } // else our old result was better
+        }
+        tot_unique += unique;
+
+        println!("Depth: {}, Unique: {}, Total Unique: {}, Improvements: {}", depth, unique,
+        tot_unique, new_best);
+
+        prev_constants = new_constants.clone(); // clone the vector
+        all_constants.append(&mut prev_constants.clone()); // clone the vector
+        new_constants = vec![]; // clear the vector
+        new_best = 0;
+        unique = 0;
+
     }
 
+    let path = "constants.txt";
+    let mut output = File::create(path).expect("Could not create file.");
 
-
-    for c in constantsList {
-
+    for c in constants_list.iter().enumerate() {
+        let print_str = format!("{:#06X} - {}", c.0, c.1);
+        //println!("{}", &print_str);
+        write!(&output, "{}\n", &print_str);
     }
+
+    /*
+
+    */
 
     let code = "01a";
 
     // main call to interpret
-    let result: u16 = interpret(code);
-    println!("{}", result);
+
 }

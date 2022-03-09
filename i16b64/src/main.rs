@@ -4,8 +4,6 @@ use std::char;
 use std::fs;
 use std::io::{self, Read, Write};
 
-
-
 const CONSTS: [u16; 10] = [
 0x1c72,
 0x14bc,
@@ -17,6 +15,7 @@ const CONSTS: [u16; 10] = [
 0x445a,
 0xb76a,
 0x25e5];
+
 
 fn interpret(code: &str, debug_flag: bool, safe: bool) {
 
