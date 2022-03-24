@@ -1,0 +1,221 @@
+
+45O               # end of input discriminator
+
+        # get month
+3bd (             # enter loop
+J                 # take input
+099lala a         # Subtract 0x0030 (add 0xffd0) to get digit
+25Ol     eid )    # if character is not equal to 0xFFFD (0x002D - 0x0030), loop
+d                 # delete the dash character
+S 45O ed (        # test if there's one digit
+  S               # swap EoI back
+  00X             # add a 0
+i )
+lDlla       a     # multiply 10s digit by 10 and add
+6Nf               # retrieve EoI discriminator to use again
+
+        # get day
+3bd (             # enter loop
+J                 # take input
+099lala a         # Subtract 0x0030 (add 0xffd0) to get digit
+25Ol     eid )    # if character is not equal to 0xFFFD (0x002D - 0x0030), loop
+d                 # delete the dash character
+S 45O ed (        # test if there's one digit
+  S               # swap EoI back
+  00X             # add a 0
+i )
+lDlla       a     # multiply 10s digit by 10 and add
+6Nf d             # retrieve EoI discriminator and delete it
+
+          # get year (from oddPlus11.16b)
+JJJJ              # Input 4 digits
+099lala a 1Np
+099lala a 1Np
+099lala a 1Np
+099lala a 1Np
+SlDllaa0p
+SlDllaa
+
+# leap year calculation (revised a bit later)
+# last bit is treated as boolean
+# lets two bits have 00 if leap year
+S                 # get last two digits
+D N               # give us 3 if leap year
+7r7Ar M           # mask last two bits out
+D r A             # sets last bit if both bits are set. (gives us 1 if we have 3)
+S
+
+00X ed (          # if last two digits == 0
+0f                # pull first two digits
+D 7r7Ar M         # duplicate and mod 4
+00X eid d 0f (    # otherwise (y%100 == 0)
+S 00X A           # set bit to 0
+i )
+0f                # rearrangement
+3bdi)             # exit loop
+
+S 5lp             # take leap year info and push it 4 values back
+
+
+# odd + 11 time!
+
+b (               # If it's odd,
+6r92aA a          # Plus 11
+)                 # Don't loop
+
+r                 # Divide by two
+
+b (               # If it's odd,
+6r92aA a          # Plus 11
+)                 # Don't loop
+
+77r7NOa M         # Modulo 7
+
+N 77rA a          # Subtract from 7 (7 - a = -a + 7 = (!a + 1) + 7 = !a + 8)
+
+# add in top 2 digits
+
+S                 # get top 2 digits
+
+1r5NA M           # Modulo 4
+
+
+# this is the part where we add to the total depending on the century
+# 0 -> 2
+# 1 -> 0
+# 2 -> 5
+# 3 -> 3
+
+
+00X       ed (    # if equal to 0 (if century is 2000, 1600, 1200...)
+d                 # delete original number
+092aA     a       # add 2 (sets flag false)
+9                 # dummy value to not activate any of the other statements
+)
+
+52ON      ed (    # if equal to 1 (if century is 2100, 1700, 1300...)
+d                 # delete original number
+00X    a          # add 0 (sets flag false)
+9                 # dummy value to not activate any of the other statements
+)
+
+092aA     ed (    # if equal to 2 (if century is 2200, 1800, 1400...)
+d                 # delete original number
+58ON   a          # add 5 (sets flag false)
+9                 # dummy value to not activate any of the other statements
+)
+
+102laX    ed (    # if equal to 3 (if century is 2300, 1900, 1500...)
+d                 # delete original number
+102laX a          # add 3 (sets flag false)
+9                 # dummy value to not activate any of the other statements
+)
+
+d                 # delete dummy
+
+
+77r7NOa M         # Modulo 7
+
+
+0p                # get date on top of stack
+2rN3a a           # add 35 to date (to prevent overflow in subtraction)
+S                 # swap to get month first
+
+
+6r14XA cd (       # if month is greater than 3
+  #4/4, 6/6, 8/8...
+  bi (             # if month is even
+    N 52ON a        # make month negative
+    a               # add month to day, should set flag true
+  i )             # end loop
+)
+
+# 5/9, 7/11, 9/5, 11/7
+# otherwise test for the other months
+6r14XA ed (       # if month 3
+  d 6rN0lO a        # delete month and subtract 28 (0+28)
+i)
+58ON ed (         # if month 5
+  d 9l24Aa a      # delete month and subtract 16 (9+7)
+i)
+1r1Arr ed (       # if month 7
+  d 58Ol a         # delete month and subtract 11
+i)
+2r3Xrr ed (       # if month 9
+  d 25Oll a        # delete month and subtract 5
+i)
+7r1Arr ed (       # if month 11
+  d 0l5Oll a      # delete month and subtract 7
+i)
+
+# leap year stuff
+14X0A ed (        # if month 2
+  d               # delete month
+  0fb  0p (       # pull 3rd number and if leap year
+    1r1AN a       # subtract 29
+  i)
+  0fbi d  (       # pull 3rd number and if not leap year
+    6rN0lO a      # subtract 28
+  i)
+)
+
+52ON ed (         # if month 1
+  d               # delete month
+  0fb  0p (       # pull 3rd number and if leap year
+    0l5Ol a       # sub 4
+  i)
+  0fbi d  (       # pull 3rd number and if not leap year
+    25Ol a        # sub 3
+  i)
+)
+
+a                 # add doomsday num and year doomsday
+
+77r7NOa M         # Modulo 7
+
+
+
+# print time baybeee
+
+# found which loops need to be inverted and which not through trial and error
+
+00X       ed (    # if it's equal to 0 (sunday)
+231lXaC26NArC
+                  # print "Sun"
+i )
+
+52ON      ed (    # if it's equal to 1 (monday)
+69r4raXC26NArC
+                  # print "Mon"
+i )
+
+092aA     ed (    # if it's equal to 2 (tuesday)
+763AraC663NalXC
+                  # print "Tues"
+)
+
+102laX    ed (    # if it's equal to 3 (wednesday)
+105laNXC3l67OAC663NalXC
+                  # print "Wednes"
+)
+
+1r5NA     ed (    # if it's equal to 4 (thursday)
+168AlXC608XrXC51r1lXaC
+                  # print "Thurs"
+)
+
+58ON      ed (    # if it's equal to 5 (friday)
+792ONaC629lAaC
+                  # print "Fri"
+)
+
+621rAA    ed (    # if it's equal to 6 (saturday)
+932laXC13N6NaXC393rarAC
+                  # print "Satur"
+)
+
+9r55RXC701lOXC16NAlC
+                  # print "day ("
+
+106AA a U         # Add 0x0030 (to convert to digit) and print
+1l06AXC           # print ")"
