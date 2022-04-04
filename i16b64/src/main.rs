@@ -1,4 +1,4 @@
-// Work in Progress
+// This language is a Work in Progress
 use std::env;
 use std::char;
 use std::fs;
