@@ -64,11 +64,11 @@ CCCCC       # print our number in reverse order
 
 1r6NAC      # print newline
 
-547NAa ed ( # if we get to 0xff
-  E         # exit
-)
-
 52ONa       # add 1 to stack
+
+#547NAa ed ( # if we get to 0xff
+#  E         # exit
+#)
 
 S d 8 S     # reset flag tracker
 
