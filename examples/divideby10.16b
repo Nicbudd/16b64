@@ -1,0 +1,39 @@
+# adapted from something I found on stack overflow
+# in all of these shift lefts, we have to mask the digits out
+
+# gets q ((n >> 1) + (n >> 2))
+D D           # duplicate twice
+r 53O A       # shift right 1 (and mask)
+S             # swap
+rr 05rO A     # shift right 2 (and mask)
+a             # add
+
+# shift right 4 and add to q
+D             # duplicate
+1L 300LX A    # shift right 4 (and mask)
+a             # add
+
+# duplicate, shift right 8, add
+D             # duplicate
+3NR 547NAa A  # shift right 8 (and mask)
+a
+
+# don't do anything with the shift right 16
+
+# shift q right 3
+rrr 033LO A
+
+# make r
+D D
+ll 50lOl A    # shift q left 2
+a             # add with q
+l 52O A       # shift left 1
+
+N 52ON a      # twos complement
+
+0f a         # n - q*10
+
+# return
+621rAA a      # add 6
+1L 300LX A    # shift right 4 (and mask)
+a             # add to q
