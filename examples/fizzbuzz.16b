@@ -1,0 +1,75 @@
+8           # const 8 (flag tracker)
+52ON        # start with variable at 1
+3bd         # set true to enter loop
+(
+
+
+D 102laX M  # find the value mod 3
+00X         # 0
+
+ed d (      # if equal to 0
+48NlaC      # print "Fi"
+561rXaC     # print "zz"
+
+            # keeps track of if we've ever done Fizz or Buzz
+S d 9 S     # replace flag tracker with 9 instead
+
+2bd )       # set false to exit loop
+
+
+
+D 58ON M    # find the value mod 5
+00X         # 0
+
+ed d (      # if equal to 0
+9l22LXC     # print "Bu"
+561rXaC     # print "zz"
+
+            # keeps track of if we've ever done Fizz or Buzz
+S d 9 S     # replace flag tracker with 9 instead
+
+2bd )       # set false to exit loop
+
+
+S 8 ed S (  # if flag tracker equal to const 8, ie no Fizz or Buzz:
+D           # duplicate number
+
+00X S       # counter starting at 0
+3bd (
+
+D 613LA M   # mod 10
+106AA a S   # convert num to ascii (add 0x30) and swap
+
+DDr53OASrr0 # divide by 10 block
+5rOAaD1L300
+LXAaD3NR547
+NAaAarrr033
+LOADDll50lO
+lAal52OAN52
+ONa0fa621rA
+Aa1L300LXAa
+
+
+
+0f          # get counter
+52ON a      # add 1 to counter
+58ON eid    # while not equal to 5 loops, loop
+S           # get x again
+)
+
+dd          # delete counter and original num
+
+CCCCC       # print our number in reverse order
+2bd )       # exit if
+
+1r6NAC      # print newline
+
+52ONa       # add 1 to stack
+
+#547NAa ed ( # if we get to 0xff
+#  E         # exit
+#)
+
+S d 8 S     # reset flag tracker
+
+i)          # if we overflow, exit the stack.
