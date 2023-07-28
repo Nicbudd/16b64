@@ -53,6 +53,16 @@ fn main() {
         .output()
         .expect("Call to clang didn't work. Perhaps it is not installed?");
 
+    let out = output.stdout;
+    let out_string = String::from_utf8(out).unwrap();
+
+    let eout = output.stderr;
+    let eout_string = String::from_utf8(eout).unwrap();
+
+    println!("{}", out_string);
+    eprintln!("{}", eout_string);
+
+
     //remove_file("temp/temp.ll").ok();
 
 
@@ -96,15 +106,12 @@ impl VirtualReg {
     }
 }
 
-struct Stack {
+struct State {
     stack: Vec<VirtualReg>,
     register_num: u32,
 }
 
-impl Stack {
-    // fn get() {
-
-    // }
+impl State {
 
     fn arithmetic_line_gen(&mut self, main_str: &mut String, action: &str) {
         let new_reg = VirtualReg::allocate_reg(&mut self.register_num);
@@ -134,6 +141,7 @@ impl Stack {
         let new_str = format!("\t{} = xor i16 {}, u0xFFFF\n", new_reg.name(), a.name());
         main_str.push_str(new_str.as_str());
     }
+
 
     fn rotl_line_gen(&mut self, main_str: &mut String) {
 
@@ -173,39 +181,44 @@ fn compile(code_string: &str) -> String {
     
     let mut main_str = String::from("define i16 @main() {\n");
     
-    let mut stack = Stack { stack: vec![], register_num: 1 };
+    let mut state = State { stack: vec![], register_num: 1 };
 
+    // %1 is going to contain the exit code.
+    let mut exit_code_reg = VirtualReg::allocate_reg(&mut state.register_num);
+    main_str.push_str("\t%1 = add i16 0, 0\n"); // lmao 
 
     //8N4Al - 0x002A - dec 42
+
+    // todo: comments
 
     for c in code_string.chars() {
         match c {
             '0'..='9' => {
                 let val = constants(c);
                 let virt_reg = VirtualReg::Constant(val);
-                stack.stack.push(virt_reg);
+                state.stack.push(virt_reg);
             }
-            'A' => {
-                stack.arithmetic_line_gen(&mut main_str, "and");
+            'A' => {state.arithmetic_line_gen(&mut main_str, "and");}
+            'D' => {
+                let a = state.stack.last().expect("Tried to duplicate nothing.").clone();
+                state.stack.push(a);
             }
-            'N' => {
-                stack.not_line_gen(&mut main_str);
-            }
-            'l' => {
-                stack.rotl_line_gen(&mut main_str)
-            }
+            'E' => {main_str.push_str("\tret i16 0\n")}
+            'N' => {state.not_line_gen(&mut main_str);}
+            'd' => {state.stack.pop().expect("Unable to delete nothing.");}
+            'l' => {state.rotl_line_gen(&mut main_str)}
             error_c => {panic!("unexpected character \"{}\" in input", c)}
         }
     }
 
     
     
-    
-    main_str.push_str("\tret i16 %5\n}");
+    let last_string = format!("\tret i16 {}\n}}", exit_code_reg.name());
+    main_str.push_str(last_string.as_str());
 
-    let st = main_str;
+    let st = main_str;        
 
-    // println!("{}", st);
+    println!("{}", st);
 
     st
 }
