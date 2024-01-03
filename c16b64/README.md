@@ -1,12 +1,12 @@
 # Overview
 
-This is my attempt at writing a x86 (x64?) Linux compiler for 16b64 (in Rust).
-
-I've never written a compiler before and I just wrote my first Hello World in ASM a few minutes ago.
+This is my attempt at writing a compiler for 16b64 (in Rust, using LLVM).
 
 So help me God. 
 
-I am following [this tutorial by Nora Sandler](https://norasandler.com/2017/11/29/Write-a-Compiler.html).
+~~I am following [this tutorial by Nora Sandler](https://norasandler.com/2017/11/29/Write-a-Compiler.html).~~
+
+I am informally taking a class in university. I am friends with the professor and he loves compilers. I am in good company.
 
 ## Get The Compiler
 
