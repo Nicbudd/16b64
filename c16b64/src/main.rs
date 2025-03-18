@@ -204,10 +204,17 @@ fn compile(code_string: &str) -> String {
                 state.stack.push(a);
             }
             'E' => {main_str.push_str("\tret i16 0\n")}
+            'M' => {state.arithmetic_line_gen(&mut main_str, "urem");}
             'N' => {state.not_line_gen(&mut main_str);}
+            'O' => {state.arithmetic_line_gen(&mut main_str, "or");}
+            'S' => {
+                let a = state.stack.pop().expect("No items on stack");
+                let b = state.stack.pop();
+
+            }
             'd' => {state.stack.pop().expect("Unable to delete nothing.");}
             'l' => {state.rotl_line_gen(&mut main_str)}
-            error_c => {panic!("unexpected character \"{}\" in input", c)}
+            _ => {panic!("unexpected character \"{}\" in input", c)}
         }
     }
 
